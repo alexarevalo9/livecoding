@@ -1,0 +1,63 @@
+schema: spec-driven
+
+context: |
+  Project: livecoding (Expo / React Native mobile app, package manager: npm via package-lock.json).
+  Stack: Expo SDK 57, React Native 0.86.3, React 19.2.3, TypeScript ~6.0 (strict), Expo Router ~57 (typedRoutes + React Compiler enabled).
+  Architecture: file-based routing in src/app/ (currently index.tsx and _layout.tsx); non-route code (components, hooks, utils) lives outside src/app/. Path alias @/* -> ./src/*.
+  Testing: no test runner configured. Quality gates are `npx expo lint` and `npx tsc --noEmit`.
+  Style: ESLint 9 flat config with eslint-config-expo; no formatter configured. Prefer Expo modules and `npx expo install` for dependencies.
+  Conventions: see AGENTS.md. Verify Expo/RN APIs against versioned docs (https://docs.expo.dev/versions/v57.0.0/) before use; never answer from memory.
+
+strict_tdd: false
+
+testing:
+  strict_tdd: false
+  strict_tdd_reason: "No test runner detected in package.json (no jest, jest-expo, vitest, or testing-library); Strict TDD is unavailable until one is added."
+  detected: 2026-09-21
+  runner:
+    command: ""
+    framework: none
+  layers:
+    unit: false
+    integration: false
+    e2e: false
+  coverage:
+    available: false
+    command: ""
+  quality:
+    linter: "npx expo lint"
+    type_checker: "npx tsc --noEmit"
+    formatter: ""
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - State whether the change needs a native module (requires a development build, not Expo Go)
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+    - Specify behavior for iOS, Android, and web when platform behavior differs
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+    - Place routes in src/app/ and keep non-route code outside it
+    - Cite the versioned Expo SDK 57 docs for every Expo, EAS, or React Native API used
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+    - Add dependencies only via `npx expo install`
+    - Include the exact guard lines for the 800-line review budget (single-pr delivery strategy)
+  apply:
+    guidelines:
+      - Follow existing code patterns
+      - Never create or edit ios/ or android/ by hand; configure native behavior in app.json and config plugins
+      - Prefer recommended Expo modules over third-party libraries
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    lint_command: "npx expo lint"
+    build_command: "npx tsc --noEmit"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
