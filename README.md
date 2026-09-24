@@ -10,7 +10,15 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Configure environment variables (see [Environment variables](#environment-variables))
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Then set your Anthropic API key in `.env.local`.
+
+3. Start the app
 
    ```bash
    npx expo start
@@ -24,6 +32,23 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Environment variables
+
+The Analysis tab calls the Anthropic API directly from the app. Copy `.env.example` to `.env.local` and fill in the value:
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `EXPO_PUBLIC_ANTHROPIC_API_KEY` | Yes, for the Analysis tab | Your Anthropic API key. Without it the Analysis tab shows a "missing key" error and sends no request. |
+
+Notes:
+
+- Keep the key in `.env.local`. `.env` and `.env*.local` are git-ignored; never commit a real key.
+- Expo reads env files when Metro starts, so restart the dev server after changing them (`npx expo start -c` if the old value sticks).
+- Variables prefixed with `EXPO_PUBLIC_` are inlined into the JavaScript bundle, so anyone who can install the app can extract the key. Use a throwaway key for development and route production traffic through a backend proxy instead.
+- The model (`claude-sonnet-4-5-20250929`) is a constant in `src/config/anthropic.ts`, not an env variable.
+
+See [Expo environment variables](https://docs.expo.dev/guides/environment-variables/) for details.
 
 ## Get a fresh project
 
